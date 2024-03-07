@@ -1,0 +1,10 @@
+import streamlit as st
+import subprocess
+
+# Function to run Pygame window
+def run_pygame():
+    subprocess.Popen(["python", "pokemon.py"])
+
+# Button to run Pygame window
+if st.button('Open Pygame Window'):
+    run_pygame()
