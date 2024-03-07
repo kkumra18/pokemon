@@ -1,0 +1,114 @@
+import pygame
+import time
+
+# Initialize the pygame
+pygame.init()
+
+# Create the screen
+screen = pygame.display.set_mode((800,600))
+
+
+# Title and Icon
+pygame.display.set_caption("Pokemon: Infinite Horizons")
+icon = pygame.image.load("logo.png")
+pygame.display.set_icon(icon)
+
+# Background
+
+background = pygame.image.load("titlescreen.png")
+
+# Front Animations - Frames after user presses S key
+front_idle = pygame.image.load("front_idle.png")
+front_swing1 = pygame.image.load("front_swing1.png")
+front_swing2 = pygame.image.load("front_swing2.png")
+front_frames = [front_idle,front_swing1, front_idle, front_swing2]
+
+# Left Animations - Frames after user presses A key
+left_idle = pygame.image.load("left_idle.png")
+left_swing1 = pygame.image.load("left_swing1.png")
+left_swing2 = pygame.image.load("left_swing2.png")
+left_frames = [left_idle,left_swing1,left_idle,left_swing2]
+
+# Right Animations - Frames after user presses D key
+right_idle = pygame.image.load("right_idle.png")
+right_swing1 = pygame.image.load("right_swing1.png")
+right_swing2 = pygame.image.load("right_swing2.png")
+right_frames = [right_idle, right_swing1, right_idle, right_swing2]
+
+
+# Back Animations - Frames after user presses W key
+back_idle = pygame.image.load("back_idle.png")
+back_swing1 = pygame.image.load("back_swing1.png")
+back_swing2 = pygame.image.load("back_swing2.png")
+back_frames = [back_idle,back_swing1,back_idle,back_swing2]
+
+
+walk_index = 0 # Keeps track of current frame in animation
+walk_delay = 0.15 # Adds delay between frame switches, they will switch every 0.15 seconds
+last_switch = time.time() # Stores where last frame change occurred
+
+current_sprite = front_idle
+currentX = 370
+currentY = 200
+speed = 1
+
+def player(x,y):
+    screen.blit(current_sprite,(x, y))
+
+running = True
+while running:
+
+    # RGB - Red Blue Green
+
+    screen.blit(background,(0,0))
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+
+    key = pygame.key.get_pressed()
+
+    if key[pygame.K_d]:
+        currentX = currentX + speed
+        current_time = time.time()
+        if current_time - last_switch > walk_delay:
+            walk_index = (walk_index + 1) % len(right_frames)
+            current_sprite = right_frames[walk_index]
+            last_switch = current_time
+
+    elif key[pygame.K_a]:
+        currentX = currentX - speed
+
+        current_time = time.time() 
+        if current_time - last_switch > walk_delay:
+            walk_index = (walk_index + 1) % len(left_frames)
+            current_sprite = left_frames[walk_index]
+            last_switch = current_time
+
+    elif key[pygame.K_s]:
+        
+        currentY = currentY + speed
+
+        current_time = time.time() # Gets current time in secs
+
+        if current_time - last_switch > walk_delay: # Checks if enough time passed since last switch
+            walk_index = (walk_index + 1) % len(front_frames) # Updates walk index to switch to next frame
+            current_sprite = front_frames[walk_index] # Current sprite is updated to new frame
+            last_switch = current_time # Updates the current time after the new frame switch
+        
+    elif key[pygame.K_w]:
+
+        currentY = currentY - speed
+
+        current_time = time.time()  # Gets current time in secs
+
+        if current_time - last_switch > walk_delay: # Checks if enough time passed since last switch
+            walk_index = (walk_index + 1) % len(back_frames) # Updates walk index to switch to next frame
+            current_sprite = back_frames[walk_index] # Current sprite is updated to new frame
+            last_switch = current_time # Updates the current time after new frame switch
+
+        
+
+    player(currentX,currentY)
+    pygame.display.update()
